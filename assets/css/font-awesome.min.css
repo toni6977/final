@@ -1,0 +1,16 @@
+/* Font Awesome Icons - заглушка */
+.fa { display: inline-block; font: normal normal normal 14px/1 FontAwesome; }
+.fa-bars:before { content: "☰"; }
+.fa-book:before { content: "📚"; }
+.fa-bar-chart:before { content: "📊"; }
+.fa-sign-out:before { content: "🚪"; }
+.fa-user-circle:before { content: "👤"; }
+.fa-clock-o:before { content: "⏰"; }
+.fa-arrow-left:before { content: "←"; }
+.fa-arrow-right:before { content: "→"; }
+.fa-play:before { content: "▶"; }
+.fa-eye:before { content: "👁"; }
+.fa-check-circle:before { content: "✓"; }
+.fa-times-circle:before { content: "✗"; }
+.fa-info-circle:before { content: "ℹ"; }
+.fa-list:before { content: "☰"; }

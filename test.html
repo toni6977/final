@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Тест</title>
+    <link href="assets/css/style.css" rel="stylesheet">
+    <style>
+        body { 
+            -webkit-touch-callout: none; 
+            -webkit-user-select: none; 
+            user-select: none; 
+        }
+        .question-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+        .option-image {
+            max-width: 200px;
+            height: auto;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <div class="page-content" style="margin-left: 0;">
+            <div class="page-inner">
+                <div class="panel">
+                    <div class="row m-b-sm">
+                        <div class="col-xs-6">
+                            <h1 class="breadcrumb-header mt-0">
+                                <span id="testTitle"></span> - 
+                                <span class="text-info" id="userName"></span>
+                            </h1>
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            <div class="alert alert-success" style="display: inline-block; margin-right: 10px;">
+                                ⏰ <span id="timer"></span>
+                            </div>
+                            <button onclick="submitTest()" class="btn btn-danger">Закончить экзамен</button>
+                        </div>
+                    </div>
+                    
+                    <div class="tabpanel">
+                        <div class="over-x">
+                            <ul class="test-nav" id="questionNav"></ul>
+                        </div>
+                        
+                        <div class="tab-content" id="questionsContent"></div>
+                    </div>
+                    
+                    <div class="text-align">
+                        <p class="m-t-lg"><b id="answeredCount">0</b>/<b id="totalCount">0</b></p>
+                        <div class="btn-group">
+                            <button class="btn btn-default" onclick="prevQuestion()">←</button>
+                            <button class="btn btn-default" onclick="nextQuestion()">→</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="protection.js"></script>
+    <script>
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (!currentUser) window.location.href = 'index.html';
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        const testId = parseInt(urlParams.get('id'));
+        const test = DB.tests.find(t => t.id === testId);
+        const questions = DB.questions.filter(q => q.testId === testId);
+        
+        let currentQuestion = 0;
+        let answers = {};
+        let startTime = Date.now();
+        let endTime = startTime + (test.duration * 60 * 1000);
+        
+        document.getElementById('testTitle').textContent = test.title;
+        document.getElementById('userName').textContent = currentUser.fullName;
+        document.getElementById('totalCount').textContent = questions.length;
+        
+        // Создание навигации
+        const nav = document.getElementById('questionNav');
+        questions.forEach((q, i) => {
+            nav.innerHTML += `<li class="${i===0?'active':''}"><a href="#" onclick="goToQuestion(${i}); return false;">${i+1}</a></li>`;
+        });
+        
+        // Создание вопросов с поддержкой изображений
+        const content = document.getElementById('questionsContent');
+        questions.forEach((q, i) => {
+            // Проверяем - вопрос это текст или изображение
+            const questionContent = q.isImage 
+                ? `<img src="${q.question}" class="question-image" alt="Вопрос ${i+1}">`
+                : `<p>${q.question}</p>`;
+            
+            // Проверяем - варианты ответов это текст или изображения
+            const optionsHtml = ['a','b','c','d'].map(opt => {
+                const optionContent = q.optionIsImage
+                    ? `<img src="${q['option'+opt.toUpperCase()]}" class="option-image" alt="Вариант ${opt}">`
+                    : `<p>${q['option'+opt.toUpperCase()]}</p>`;
+                
+                return `
+                    <li>
+                        <input type="radio" class="test-radio" id="q${i}${opt}" name="q${i}" value="${opt}" 
+                               onchange="selectAnswer(${i}, '${opt}')">
+                        <label for="q${i}${opt}">
+                            <span class="test-variant">${opt}</span>
+                            ${optionContent}
+                        </label>
+                    </li>
+                `;
+            }).join('');
+            
+            const qHtml = `
+                <div class="tab-pane ${i===0?'active in':'fade'}" id="q${i}">
+                    <div class="test-question">${questionContent}</div>
+                    <div class="label label-info">Балл: ${q.points}</div>
+                    <div class="test-content m-t-xs">
+                        <ul class="answers-test">
+                            ${optionsHtml}
+                        </ul>
+                    </div>
+                </div>
+            `;
+            content.innerHTML += qHtml;
+        });
+        
+        function selectAnswer(qIndex, answer) {
+            answers[qIndex] = answer;
+            document.querySelectorAll('.test-nav li')[qIndex].classList.add('btn-primary');
+            document.getElementById('answeredCount').textContent = Object.keys(answers).length;
+            if (qIndex < questions.length - 1) goToQuestion(qIndex + 1);
+        }
+        
+        function goToQuestion(index) {
+            document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active', 'in'));
+            document.querySelectorAll('.test-nav li').forEach(l => l.classList.remove('active'));
+            document.getElementById('q'+index).classList.add('active', 'in');
+            document.querySelectorAll('.test-nav li')[index].classList.add('active');
+            currentQuestion = index;
+        }
+        
+        function nextQuestion() { if (currentQuestion < questions.length-1) goToQuestion(currentQuestion+1); }
+        function prevQuestion() { if (currentQuestion > 0) goToQuestion(currentQuestion-1); }
+        
+        function submitTest() {
+            let score = 0, maxScore = 0;
+            const results = questions.map((q, i) => {
+                maxScore += q.points;
+                const isCorrect = answers[i] === q.correctAnswer;
+                if (isCorrect) score += q.points;
+                return { 
+                    questionId: q.id, 
+                    question: q.isImage ? '(Вопрос-изображение)' : q.question, 
+                    userAnswer: answers[i] || null, 
+                    correctAnswer: q.correctAnswer, 
+                    isCorrect, 
+                    points: isCorrect ? q.points : 0 
+                };
+            });
+            
+            const result = {
+                id: Date.now(),
+                userId: currentUser.id,
+                testId: test.id,
+                score, maxScore,
+                percentage: Math.round((score/maxScore)*100*100)/100,
+                date: new Date().toLocaleString('ru-RU'),
+                details: results
+            };
+            
+            const allResults = JSON.parse(localStorage.getItem('testResults') || '[]');
+            allResults.push(result);
+            localStorage.setItem('testResults', JSON.stringify(allResults));
+            window.location.href = 'result.html?id=' + result.id;
+        }
+        
+        // Таймер
+        setInterval(() => {
+            const now = Date.now();
+            const diff = Math.max(0, endTime - now);
+            const hours = Math.floor(diff/3600000);
+            const mins = Math.floor((diff%3600000)/60000);
+            const secs = Math.floor((diff%60000)/1000);
+            document.getElementById('timer').textContent = 
+                `${hours.toString().padStart(2,'0')}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+            if (diff === 0) submitTest();
+        }, 1000);
+    </script>
+</body>
+</html>

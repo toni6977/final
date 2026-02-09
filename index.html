@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Авторизация - Тесты по БД</title>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/style.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #1d2d5b 0%, #2a4073 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-container {
+            background: white;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            max-width: 400px;
+            width: 100%;
+        }
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .login-header h1 {
+            color: #1d2d5b;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .login-header p {
+            color: #666;
+            font-size: 14px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-control {
+            height: 45px;
+            border-radius: 5px;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        .btn-login {
+            width: 100%;
+            height: 45px;
+            background: #1d2d5b;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .btn-login:hover {
+            background: #2a4073;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(29, 45, 91, 0.3);
+        }
+        .alert {
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>🎓 Система тестирования</h1>
+            <p>Тесты по базам данных</p>
+        </div>
+        
+        <div id="errorMsg" class="alert alert-danger" style="display: none;"></div>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Логин</label>
+                <input type="text" id="username" class="form-control" required autofocus>
+            </div>
+            <div class="form-group">
+                <label>Пароль</label>
+                <input type="password" id="password" class="form-control" required>
+            </div>
+            <button type="submit" class="btn-login">Войти</button>
+        </form>
+        
+        <div style="margin-top: 20px; text-align: center; color: #666; font-size: 12px;">
+            <p>Тестовые данные:</p>
+            <p><strong>student1</strong> / password123</p>
+        </div>
+    </div>
+
+    <script>
+        // Проверяем, авторизован ли пользователь
+        if (localStorage.getItem('currentUser')) {
+            window.location.href = 'tests.html';
+        }
+
+        // Данные пользователей
+        const users = [
+            { id: 1, username: 'student1', password: 'password123', fullName: 'Иванов Иван Иванович' },
+            { id: 2, username: 'student2', password: 'password123', fullName: 'Петров Петр Петрович' },
+            { id: 3, username: 'student3', password: 'password123', fullName: 'Сидоров Сидор Сидорович' }
+        ];
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            const user = users.find(u => u.username === username && u.password === password);
+            
+            if (user) {
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                window.location.href = 'tests.html';
+            } else {
+                const errorMsg = document.getElementById('errorMsg');
+                errorMsg.textContent = 'Неверный логин или пароль';
+                errorMsg.style.display = 'block';
+            }
+        });
+    </script>
+    <script src="protection.js"></script>
+</body>
+</html>
