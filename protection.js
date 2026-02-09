@@ -23,7 +23,7 @@
             showWarning();
             return false;
         }
-        
+        /*
         // Ctrl+Shift+J (Консоль)
         if (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.keyCode === 74)) {
             e.preventDefault();
@@ -39,7 +39,7 @@
             showWarning();
             return false;
         }
-        
+        */
         // Ctrl+U (Просмотр исходного кода)
         if (e.ctrlKey && (e.key === 'U' || e.keyCode === 85)) {
             e.preventDefault();
@@ -47,7 +47,7 @@
             showWarning();
             return false;
         }
-        
+        /*
         // Ctrl+S (Сохранить страницу)
         if (e.ctrlKey && (e.key === 'S' || e.keyCode === 83)) {
             e.preventDefault();
@@ -326,6 +326,7 @@
         childList: true,
         subtree: true
     });
+    */
     
     console.log('%c🔒 ЗАЩИТА АКТИВИРОВАНА', 'color: red; font-size: 20px; font-weight: bold;');
     console.log('%cПопытка просмотра кода = нарушение правил тестирования!', 'color: orange; font-size: 14px;');
