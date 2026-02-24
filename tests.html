@@ -46,7 +46,7 @@
             background: #fff;
         }
         .accordion-content.active {
-            max-height: 2000px; /* достаточно большой, чтобы вместить все тесты */
+            max-height: 2000px;
             padding: 20px;
         }
         .test-row {
@@ -76,9 +76,9 @@
 </head>
 <body class="page-sidebar-fixed page-header-fixed">
     <div class="page-container">
-        <!-- Sidebar (без изменений) -->
+        <!-- Sidebar -->
         <div class="page-sidebar">
-            <a class='logo-box' href='/tests'>
+            <a class='logo-box' href="tests.html">
                 <div>
                     <span style="color: white; font-size: 18px;">🎓 Система тестирования</span>
                 </div>
@@ -87,12 +87,12 @@
                 <div class="page-sidebar-menu">
                     <ul class="accordion-menu">
                         <li class="active">
-                            <a href='/tests'>
+                            <a href="tests.html">
                                 <i class="menu-icon">📚</i><span>Мои тесты</span>
                             </a>
                         </li>
                         <li>
-                            <a href='/results'>
+                            <a href="results.html">
                                 <i class="menu-icon">📊</i><span>Результаты</span>
                             </a>
                         </li>
@@ -131,7 +131,6 @@
                 <div class="page-title">
                     <h1>Доступные тесты</h1>
                 </div>
-
                 <div id="sectionsContainer"></div>
             </div>
         </div>
@@ -153,7 +152,6 @@
             const sectionBlock = document.createElement('div');
             sectionBlock.className = 'accordion-section';
 
-            // Заголовок (кликабельный)
             const header = document.createElement('div');
             header.className = 'accordion-header';
             header.innerHTML = `
@@ -163,7 +161,6 @@
                 </small>
             `;
 
-            // Контент (скрытый по умолчанию)
             const content = document.createElement('div');
             content.className = 'accordion-content';
 
@@ -187,7 +184,6 @@
                     `;
                     row.appendChild(card);
                 });
-
                 content.appendChild(row);
             }
 
@@ -195,23 +191,20 @@
             sectionBlock.appendChild(content);
             container.appendChild(sectionBlock);
 
-            // Обработчик клика по заголовку
+            // Раскрытие/закрытие раздела
             header.addEventListener('click', () => {
                 const isActive = content.classList.contains('active');
                 
-                // Закрываем все остальные разделы (опционально)
                 document.querySelectorAll('.accordion-content').forEach(c => {
                     c.classList.remove('active');
                     c.previousElementSibling.classList.remove('active');
                 });
 
-                // Открываем/закрываем текущий
                 content.classList.toggle('active', !isActive);
                 header.classList.toggle('active', !isActive);
             });
         });
 
-        // Функции logout, sidebar toggle и dropdown — без изменений
         function logout() {
             localStorage.removeItem('currentUser');
             window.location.href = 'index.html';
