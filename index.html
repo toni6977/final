@@ -137,5 +137,15 @@
         });
     </script>
     <script src="protection.js"></script>
+    <script>
+document.addEventListener('keydown', e => {
+    if (e.key === 'F12' || 
+        (e.ctrlKey && e.shiftKey && e.key === 'I') || 
+        (e.ctrlKey && e.key === 'U')) {
+        e.preventDefault();
+        alert('Эта функция отключена');
+    }
+});
+</script>
 </body>
 </html>
