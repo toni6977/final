@@ -105,7 +105,7 @@
             window.location.href = 'tests.html';
         }
 
-        // Фильтруем вопросы именно по этому testId
+        // Фильтруем вопросы по testId
         const questions = DB.questions.filter(q => q.testId === testId);
 
         if (questions.length === 0) {
@@ -123,7 +123,7 @@
         document.getElementById('userName').textContent = currentUser.fullName;
         document.getElementById('totalCount').textContent = questions.length;
 
-        // Создаём навигацию по вопросам
+        // Навигация по вопросам
         const nav = document.getElementById('questionNav');
         questions.forEach((q, i) => {
             const li = document.createElement('li');
@@ -132,15 +132,13 @@
             nav.appendChild(li);
         });
 
-        // Создаём сами вопросы
+        // Создание вопросов
         const content = document.getElementById('questionsContent');
         questions.forEach((q, i) => {
-            // Вопрос — текст или изображение
             const questionContent = q.isImage
                 ? `<img src="${q.question}" class="question-image" alt="Вопрос ${i+1}">`
                 : `<p>${q.question}</p>`;
 
-            // Варианты — текст или изображения
             const optionsHtml = ['A', 'B', 'C', 'D'].map(opt => {
                 const key = 'option' + opt;
                 const optionContent = q.optionIsImage
@@ -177,24 +175,21 @@
         // Выбор ответа
         function selectAnswer(qIndex, answer) {
             answers[qIndex] = answer;
-            // Помечаем вопрос как отвеченный в навигации
             document.querySelectorAll('.test-nav li')[qIndex].classList.add('btn-primary');
             document.getElementById('answeredCount').textContent = Object.keys(answers).length;
 
-            // Автоматический переход к следующему (можно убрать, если не нужно)
+            // Авто-переход к следующему (можно убрать)
             if (qIndex < questions.length - 1) {
                 setTimeout(() => goToQuestion(qIndex + 1), 400);
             }
         }
 
-        // Переход к конкретному вопросу
+        // Переход к вопросу
         function goToQuestion(index) {
             document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active', 'in'));
             document.querySelectorAll('.test-nav li').forEach(l => l.classList.remove('active'));
-            
             document.getElementById('q' + index).classList.add('active', 'in');
             document.querySelectorAll('.test-nav li')[index].classList.add('active');
-            
             currentQuestion = index;
         }
 
@@ -206,7 +201,7 @@
             if (currentQuestion > 0) goToQuestion(currentQuestion - 1);
         }
 
-        // Отправка теста
+        // Завершение теста
         function submitTest() {
             if (confirm('Вы уверены, что хотите завершить тест?')) {
                 let score = 0;
@@ -217,7 +212,6 @@
                     const userAns = answers[i];
                     const isCorrect = userAns === q.correctAnswer;
                     if (isCorrect) score += q.points;
-
                     return {
                         questionId: q.id,
                         question: q.isImage ? '(изображение)' : q.question,
@@ -241,12 +235,12 @@
                     details: results
                 };
 
-                // Сохраняем результат
+                // Сохранение результата
                 const allResults = JSON.parse(localStorage.getItem('testResults') || '[]');
                 allResults.push(result);
                 localStorage.setItem('testResults', JSON.stringify(allResults));
 
-                // Переход на страницу результата
+                // Переход на результат
                 window.location.href = 'result.html?id=' + result.id;
             }
         }
