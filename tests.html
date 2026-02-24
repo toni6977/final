@@ -46,7 +46,7 @@
             background: #fff;
         }
         .accordion-content.active {
-            max-height: 2000px;
+            max-height: 2000px; /* достаточно большой, чтобы вместить все тесты */
             padding: 20px;
         }
         .test-row {
@@ -184,6 +184,7 @@
                     `;
                     row.appendChild(card);
                 });
+
                 content.appendChild(row);
             }
 
@@ -195,11 +196,13 @@
             header.addEventListener('click', () => {
                 const isActive = content.classList.contains('active');
                 
+                // Закрываем все остальные разделы
                 document.querySelectorAll('.accordion-content').forEach(c => {
                     c.classList.remove('active');
                     c.previousElementSibling.classList.remove('active');
                 });
 
+                // Открываем/закрываем текущий
                 content.classList.toggle('active', !isActive);
                 header.classList.toggle('active', !isActive);
             });
