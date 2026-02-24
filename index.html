@@ -147,5 +147,79 @@ document.addEventListener('keydown', e => {
     }
 });
 </script>
+    <script>
+// Отключаем F12, Ctrl+Shift+I/J/C/U
+document.onkeydown = function(e) {
+    if (
+        e.keyCode === 123 ||                          // F12
+        (e.ctrlKey && e.shiftKey && e.keyCode === 73) || // Ctrl+Shift+I
+        (e.ctrlKey && e.shiftKey && e.keyCode === 74) || // Ctrl+Shift+J
+        (e.ctrlKey && e.keyCode === 85) ||             // Ctrl+U
+        (e.ctrlKey && e.shiftKey && e.keyCode === 67)    // Ctrl+Shift+C
+    ) {
+        return false;
+    }
+};
+
+// Блокируем правый клик
+document.oncontextmenu = function() {
+    return false;
+};
+
+// Отключаем выделение текста
+document.onselectstart = function() {
+    return false;
+};
+</script>
+    <script>
+// Блокируем открытие DevTools через горячие клавиши
+document.addEventListener('keydown', function(e) {
+    // Ctrl + Shift + I, Ctrl + Shift + J, Ctrl + U, F12
+    if (
+        (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+        (e.ctrlKey && e.key === 'u') ||
+        e.key === 'F12' ||
+        (e.ctrlKey && e.shiftKey && e.key === 'i') ||
+        (e.metaKey && e.altKey && e.key === 'i') // для Mac иногда
+    ) {
+        e.preventDefault();
+        e.stopPropagation();
+        alert('Инструменты разработчика отключены на этой странице.');
+        return false;
+    }
+});
+
+// Блокируем правый клик (опционально, но полезно)
+document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    alert('Контекстное меню отключено на этой странице.');
+});
+
+// Дополнительно: попытка обнаружения открытия DevTools через изменение размеров окна
+let devtoolsOpen = false;
+const threshold = 160; // порог в пикселях
+
+setInterval(() => {
+    const widthDiff = window.outerWidth - window.innerWidth;
+    const heightDiff = window.outerHeight - window.innerHeight;
+
+    if (
+        widthDiff > threshold || 
+        heightDiff > threshold ||
+        (window.console && window.console.firebug) ||
+        (window.outerWidth - window.innerWidth > 100)
+    ) {
+        if (!devtoolsOpen) {
+            devtoolsOpen = true;
+            alert('Попытка открыть инструменты разработчика обнаружена.');
+            // Можно сразу перенаправить или закрыть вкладку
+            // window.location.href = 'about:blank';
+            // или window.close();
+        }
+    } else {
+        devtoolsOpen = false;
+    }
+}, 500);
+</script>
 </body>
 </html>
