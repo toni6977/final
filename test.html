@@ -6,10 +6,10 @@
     <title>Тест</title>
     <link href="assets/css/style.css" rel="stylesheet">
     <style>
-        body { 
-            -webkit-touch-callout: none; 
-            -webkit-user-select: none; 
-            user-select: none; 
+        body {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
         }
         .question-image {
             max-width: 100%;
@@ -24,6 +24,18 @@
             border-radius: 4px;
             margin-top: 10px;
         }
+        .test-nav li {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .test-nav li.active {
+            background: #3498db;
+            color: white;
+        }
+        .test-nav li.btn-primary {
+            background: #2ecc71 !important;
+            color: white !important;
+        }
     </style>
 </head>
 <body>
@@ -34,7 +46,7 @@
                     <div class="row m-b-sm">
                         <div class="col-xs-6">
                             <h1 class="breadcrumb-header mt-0">
-                                <span id="testTitle"></span> - 
+                                <span id="testTitle"></span> —
                                 <span class="text-info" id="userName"></span>
                             </h1>
                         </div>
@@ -45,20 +57,20 @@
                             <button onclick="submitTest()" class="btn btn-danger">Закончить экзамен</button>
                         </div>
                     </div>
-                    
+
                     <div class="tabpanel">
                         <div class="over-x">
                             <ul class="test-nav" id="questionNav"></ul>
                         </div>
-                        
+
                         <div class="tab-content" id="questionsContent"></div>
                     </div>
-                    
+
                     <div class="text-align">
                         <p class="m-t-lg"><b id="answeredCount">0</b>/<b id="totalCount">0</b></p>
                         <div class="btn-group">
-                            <button class="btn btn-default" onclick="prevQuestion()">←</button>
-                            <button class="btn btn-default" onclick="nextQuestion()">→</button>
+                            <button class="btn btn-default" onclick="prevQuestion()">← Предыдущий</button>
+                            <button class="btn btn-default" onclick="nextQuestion()">Следующий →</button>
                         </div>
                     </div>
                 </div>
@@ -68,57 +80,88 @@
 
     <script src="data.js"></script>
     <script>
+        // Проверка авторизации
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        if (!currentUser) window.location.href = 'index.html';
-        
+        if (!currentUser) {
+            window.location.href = 'index.html';
+        }
+
+        // Получаем ID теста из URL
         const urlParams = new URLSearchParams(window.location.search);
         const testId = parseInt(urlParams.get('id'));
-        const test = DB.tests.find(t => t.id === testId);
+
+        // Ищем тест по всем разделам
+        let selectedTest = null;
+        for (const section of DB.sections) {
+            const found = section.tests.find(t => t.id === testId);
+            if (found) {
+                selectedTest = found;
+                break;
+            }
+        }
+
+        if (!selectedTest) {
+            alert('Тест с ID ' + testId + ' не найден!');
+            window.location.href = 'tests.html';
+        }
+
+        // Фильтруем вопросы именно по этому testId
         const questions = DB.questions.filter(q => q.testId === testId);
-        
+
+        if (questions.length === 0) {
+            alert('Для этого теста нет вопросов!');
+            window.location.href = 'tests.html';
+        }
+
         let currentQuestion = 0;
         let answers = {};
         let startTime = Date.now();
-        let endTime = startTime + (test.duration * 60 * 1000);
-        
-        document.getElementById('testTitle').textContent = test.title;
+        let endTime = startTime + (selectedTest.duration * 60 * 1000);
+
+        // Заполняем заголовок
+        document.getElementById('testTitle').textContent = selectedTest.title;
         document.getElementById('userName').textContent = currentUser.fullName;
         document.getElementById('totalCount').textContent = questions.length;
-        
-        // Создание навигации
+
+        // Создаём навигацию по вопросам
         const nav = document.getElementById('questionNav');
         questions.forEach((q, i) => {
-            nav.innerHTML += `<li class="${i===0?'active':''}"><a href="#" onclick="goToQuestion(${i}); return false;">${i+1}</a></li>`;
+            const li = document.createElement('li');
+            li.innerHTML = `<a href="#" onclick="goToQuestion(${i}); return false;">${i+1}</a>`;
+            if (i === 0) li.classList.add('active');
+            nav.appendChild(li);
         });
-        
-        // Создание вопросов с поддержкой изображений
+
+        // Создаём сами вопросы
         const content = document.getElementById('questionsContent');
         questions.forEach((q, i) => {
-            // Проверяем - вопрос это текст или изображение
-            const questionContent = q.isImage 
+            // Вопрос — текст или изображение
+            const questionContent = q.isImage
                 ? `<img src="${q.question}" class="question-image" alt="Вопрос ${i+1}">`
                 : `<p>${q.question}</p>`;
-            
-            // Проверяем - варианты ответов это текст или изображения
-            const optionsHtml = ['a','b','c','d'].map(opt => {
+
+            // Варианты — текст или изображения
+            const optionsHtml = ['A', 'B', 'C', 'D'].map(opt => {
+                const key = 'option' + opt;
                 const optionContent = q.optionIsImage
-                    ? `<img src="${q['option'+opt.toUpperCase()]}" class="option-image" alt="Вариант ${opt}">`
-                    : `<p>${q['option'+opt.toUpperCase()]}</p>`;
-                
+                    ? `<img src="${q[key]}" class="option-image" alt="Вариант ${opt}">`
+                    : `<p>${q[key]}</p>`;
+
                 return `
                     <li>
-                        <input type="radio" class="test-radio" id="q${i}${opt}" name="q${i}" value="${opt}" 
-                               onchange="selectAnswer(${i}, '${opt}')">
-                        <label for="q${i}${opt}">
+                        <input type="radio" class="test-radio" id="q${i}${opt.toLowerCase()}" 
+                               name="q${i}" value="${opt.toLowerCase()}"
+                               onchange="selectAnswer(${i}, '${opt.toLowerCase()}')">
+                        <label for="q${i}${opt.toLowerCase()}">
                             <span class="test-variant">${opt}</span>
                             ${optionContent}
                         </label>
                     </li>
                 `;
             }).join('');
-            
+
             const qHtml = `
-                <div class="tab-pane ${i===0?'active in':'fade'}" id="q${i}">
+                <div class="tab-pane ${i===0 ? 'active in' : 'fade'}" id="q${i}">
                     <div class="test-question">${questionContent}</div>
                     <div class="label label-info">Балл: ${q.points}</div>
                     <div class="test-content m-t-xs">
@@ -130,67 +173,99 @@
             `;
             content.innerHTML += qHtml;
         });
-        
+
+        // Выбор ответа
         function selectAnswer(qIndex, answer) {
             answers[qIndex] = answer;
+            // Помечаем вопрос как отвеченный в навигации
             document.querySelectorAll('.test-nav li')[qIndex].classList.add('btn-primary');
             document.getElementById('answeredCount').textContent = Object.keys(answers).length;
-            if (qIndex < questions.length - 1) goToQuestion(qIndex + 1);
+
+            // Автоматический переход к следующему (можно убрать, если не нужно)
+            if (qIndex < questions.length - 1) {
+                setTimeout(() => goToQuestion(qIndex + 1), 400);
+            }
         }
-        
+
+        // Переход к конкретному вопросу
         function goToQuestion(index) {
             document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active', 'in'));
             document.querySelectorAll('.test-nav li').forEach(l => l.classList.remove('active'));
-            document.getElementById('q'+index).classList.add('active', 'in');
+            
+            document.getElementById('q' + index).classList.add('active', 'in');
             document.querySelectorAll('.test-nav li')[index].classList.add('active');
+            
             currentQuestion = index;
         }
-        
-        function nextQuestion() { if (currentQuestion < questions.length-1) goToQuestion(currentQuestion+1); }
-        function prevQuestion() { if (currentQuestion > 0) goToQuestion(currentQuestion-1); }
-        
-        function submitTest() {
-            let score = 0, maxScore = 0;
-            const results = questions.map((q, i) => {
-                maxScore += q.points;
-                const isCorrect = answers[i] === q.correctAnswer;
-                if (isCorrect) score += q.points;
-                return { 
-                    questionId: q.id, 
-                    question: q.isImage ? '(Вопрос-изображение)' : q.question, 
-                    userAnswer: answers[i] || null, 
-                    correctAnswer: q.correctAnswer, 
-                    isCorrect, 
-                    points: isCorrect ? q.points : 0 
-                };
-            });
-            
-            const result = {
-                id: Date.now(),
-                userId: currentUser.id,
-                testId: test.id,
-                score, maxScore,
-                percentage: Math.round((score/maxScore)*100*100)/100,
-                date: new Date().toLocaleString('ru-RU'),
-                details: results
-            };
-            
-            const allResults = JSON.parse(localStorage.getItem('testResults') || '[]');
-            allResults.push(result);
-            localStorage.setItem('testResults', JSON.stringify(allResults));
-            window.location.href = 'result.html?id=' + result.id;
+
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) goToQuestion(currentQuestion + 1);
         }
-        
+
+        function prevQuestion() {
+            if (currentQuestion > 0) goToQuestion(currentQuestion - 1);
+        }
+
+        // Отправка теста
+        function submitTest() {
+            if (confirm('Вы уверены, что хотите завершить тест?')) {
+                let score = 0;
+                let maxScore = 0;
+
+                const results = questions.map((q, i) => {
+                    maxScore += q.points;
+                    const userAns = answers[i];
+                    const isCorrect = userAns === q.correctAnswer;
+                    if (isCorrect) score += q.points;
+
+                    return {
+                        questionId: q.id,
+                        question: q.isImage ? '(изображение)' : q.question,
+                        userAnswer: userAns || '—',
+                        correctAnswer: q.correctAnswer,
+                        isCorrect,
+                        points: isCorrect ? q.points : 0
+                    };
+                });
+
+                const result = {
+                    id: Date.now(),
+                    userId: currentUser.id,
+                    testId: testId,
+                    testTitle: selectedTest.title,
+                    score,
+                    maxScore,
+                    percentage: Math.round((score / maxScore) * 100 * 100) / 100,
+                    date: new Date().toLocaleString('ru-RU'),
+                    durationUsed: Math.round((Date.now() - startTime) / 1000 / 60) + ' мин',
+                    details: results
+                };
+
+                // Сохраняем результат
+                const allResults = JSON.parse(localStorage.getItem('testResults') || '[]');
+                allResults.push(result);
+                localStorage.setItem('testResults', JSON.stringify(allResults));
+
+                // Переход на страницу результата
+                window.location.href = 'result.html?id=' + result.id;
+            }
+        }
+
         // Таймер
         setInterval(() => {
             const now = Date.now();
             const diff = Math.max(0, endTime - now);
-            const hours = Math.floor(diff/3600000);
-            const mins = Math.floor((diff%3600000)/60000);
-            const secs = Math.floor((diff%60000)/1000);
-            document.getElementById('timer').textContent = 
-                `${hours.toString().padStart(2,'0')}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
-            if (diff === 0) submitTest();
+            const hours = Math.floor(diff / 3600000);
+            const mins = Math.floor((diff % 3600000) / 60000);
+            const secs = Math.floor((diff % 60000) / 1000);
+
+            document.getElementById('timer').textContent =
+                `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+            if (diff <= 0) {
+                alert('Время вышло! Тест завершается автоматически.');
+                submitTest();
+            }
         }, 1000);
     </script>
 </body>
