@@ -243,325 +243,326 @@ const DB = {
         { id: 50, testId: 3, question: "Что такое aggregation pipeline в MongoDB?", optionA: "Инструмент для резервного копирования", optionB: "Фреймворк для обработки данных через последовательность операций", optionC: "Тип индекса", optionD: "Метод репликации", correctAnswer: "b", points: 4 }
         [
     [
-    {
-        "id": 1,
-        "testId": 4,
-        "question": "Эксперимент состоит из подбрасывания одной монеты до появления герба. Найти вероятность того, что эксперимент закончится в нечётном шаге?",
-        "optionA": "3/4",
-        "optionB": "2/3",
-        "optionC": "1/3",
-        "optionD": "1/2",
-        "correctAnswer": "b",
-        "points": 2
-    },
-    {
-        "id": 2,
-        "testId": 4,
-        "question": "Вероятность попадания хотя бы одного в цель при одном залпе из двух орудий равна 0,98. Найти вероятность поражения цели при одном выстреле первого орудия, если известно, что для второго орудия эта вероятность равна 0,9.",
-        "optionA": "0,95",
-        "optionB": "0,6",
-        "optionC": "0,8",
-        "optionD": "0,7",
-        "correctAnswer": "c",
-        "points": 2
-    },
-    {
-        "id": 3,
-        "testId": 4,
-        "question": "В квадрат со стороной 1 брошена 1 точка. Найти вероятность того, что расстояние от точки до стороны квадрата не превышает 0,1.",
-        "optionA": "0,36",
-        "optionB": "1",
-        "optionC": "0,4",
-        "optionD": "0,04",
-        "correctAnswer": "a",
-        "points": 2
-    },
-    {
-        "id": 4,
-        "testId": 4,
-        "question": "Как определяется наивероятнейшее число наступивших событий k₀ в схеме Бернулли?",
-        "optionA": "np - p < k₀ < np + q",
-        "optionB": "np + q < k₀ < np + p",
-        "optionC": "np - q < k₀ < np + p",
-        "optionD": "np - q < k₀ < np - p",
-        "correctAnswer": "c",
-        "points": 2
-    },
-    {
-        "id": 5,
-        "testId": 4,
-        "question": "X принимает значения -1, 1 с вероятностями 0.6 и 0.4, Y принимает -1 и +1 с вероятностями 0.3 и 0.7 (независимы). Найти среднее квадратическое отклонение X+Y.",
-        "optionA": "√1.84",
-        "optionB": "√0.2",
-        "optionC": "√1.2",
-        "optionD": "√1.8",
-        "correctAnswer": "d",
-        "points": 2
-    },
-    {
-        "id": 6,
-        "testId": 4,
-        "question": "Какое свойство справедливо для функции плотности случайной величины ξ?",
-        "optionA": "f_ξ(x) ≥ 0",
-        "optionB": "f_ξ(x) ≥ 0.5",
-        "optionC": "f_ξ(x) > 0",
-        "optionD": "f_ξ(x) ≤ 0",
-        "correctAnswer": "a",
-        "points": 2
-    },
-    {
-        "id": 7,
-        "testId": 4,
-        "question": "Найти дисперсию непрерывной случайной величины, равномерно распределённой на интервале [-4, 8].",
-        "optionA": "11",
-        "optionB": "13",
-        "optionC": "12",
-        "optionD": "10",
-        "correctAnswer": "c",
-        "points": 2
-    },
-    {
-        "id": 8,
-        "testId": 4,
-        "question": "Найти M(X·Y) по таблице совместного распределения.",
-        "optionA": "14",
-        "optionB": "0.6",
-        "optionC": "26.6",
-        "optionD": "2.1",
-        "correctAnswer": "c",
-        "points": 2
-    },
-    {
-        "id": 9,
-        "testId": 4,
-        "question": "Для выборки 8, 5, 6, 9 найти среднее квадратическое отклонение.",
-        "optionA": "70.5",
-        "optionB": "60.5",
-        "optionC": "50.5",
-        "optionD": "80.5",
-        "correctAnswer": "b",
-        "points": 2
-    },
-    {
-        "id": 10,
-        "testId": 4,
-        "question": "Найти медиану по таблице частот (2:8, 6:16, 9:14, 13:7, 16:5).",
-        "optionA": "9",
-        "optionB": "14",
-        "optionC": "16",
-        "optionD": null,
-        "correctAnswer": "a",
-        "points": 2
-    },
-    {
-        "id": 11,
-        "testId": 4,
-        "question": "Найти моду интервального ряда (0;2):6, (2;4):7, (4;6):5, (6;8):2.",
-        "optionA": "12/17",
-        "optionB": "3/5",
-        "optionC": "9/5",
-        "optionD": "8/3",
-        "correctAnswer": "d",
-        "points": 2
-    },
-    {
-        "id": 12,
-        "testId": 4,
-        "question": "X имеет показательное распределение. Найти оценку параметра λ методом моментов.",
-        "optionA": "5/8",
-        "optionB": "17/10",
-        "optionC": "5/9",
-        "optionD": "10/17",
-        "correctAnswer": "d",
-        "points": 2
-    },
-    {
-        "id": 13,
-        "testId": 4,
-        "question": "Методом наименьших квадратов найти уравнение регрессии y = a·x + b.",
-        "optionA": "y = -0,7941·x + 8,5294",
-        "optionB": "y = -0,7941·x + 8,5294",
-        "optionC": "y = 1,0588·x + 3,1765",
-        "optionD": "y = -1,0556·x + 9,7778",
-        "correctAnswer": "a",
-        "points": 2
-    },
-    {
-        "id": 14,
-        "testId": 4,
-        "question": "Из 30 стрелков: 12 с p=0.6, 8 с p=0.5, 10 с p=0.7. Стрелок попал. Вероятность, что он из первой группы?",
-        "optionA": "36/91",
-        "optionB": "20/91",
-        "optionC": "35/91",
-        "optionD": "91/150",
-        "correctAnswer": "a",
-        "points": 2
-    },
-    {
-        "id": 15,
-        "testId": 4,
-        "question": "Если A = (-∞; 3) и B = [-1; +∞), найти A Δ B.",
-        "optionA": "(-∞; -1)",
-        "optionB": "(-∞; -1) ∪ [3; +∞)",
-        "optionC": "[3; +∞)",
-        "optionD": "[-1;3)",
-        "correctAnswer": "b",
-        "points": 2
-    },
-    {
-        "id": 16,
-        "testId": 4,
-        "question": "Вероятность ровно одного попадания при залпе из двух орудий = 0.38, p₂ = 0.7. Найти p₁.",
-        "optionA": "0.5",
-        "optionB": "0.8",
-        "optionC": "0.6",
-        "optionD": "0.9",
-        "correctAnswer": "b",
-        "points": 2
-    },
-    {
-        "id": 17,
-        "testId": 4,
-        "question": "Если -2 ≤ x ≤ 2, -2 ≤ y ≤ 2, найти P(x² + y² < 1).",
-        "optionA": "π/16",
-        "optionB": "π/4",
-        "optionC": "1",
-        "optionD": "16π",
-        "correctAnswer": "a",
-        "points": 2
-    },
-    {
-        "id": 18,
-        "testId": 4,
-        "question": "В формулах Бернулли и Пуассона как определяется вероятность, что событие A произойдёт больше чем k раз?",
-        "optionA": "P(0) + … + P(k)",
-        "optionB": "P(0) + … + P(k-1)",
-        "optionC": "P(k) + … + P(n)",
-        "optionD": "P(k+1) + … + P(n)",
-        "correctAnswer": "d",
-        "points": 2
-    },
-    {
-        "id": 19,
-        "testId": 4,
-        "question": "Если D \bar{x} = 4, D \bar{y} = 3, найти D((4\bar{x} - 5\bar{y})/10 + 2022).",
-        "optionA": "-0.21",
-        "optionB": "1.42",
-        "optionC": "1.39",
-        "optionD": "-0.12",
-        "correctAnswer": "c",
-        "points": 2
-    },
-    {
-        "id": 20,
-        "testId": 4,
-        "question": "Математическое ожидание непрерывной случайной величины ξ",
-        "optionA": "∫ (x-a) f(x) dx",
-        "optionB": "∫_a^b x f(x) dx",
-        "optionC": "∫ x f(x) dx",
-        "optionD": "∫_{-∞}^{+∞} x f_ξ(x) dx",
-        "correctAnswer": "d",
-        "points": 2
-    },
-    {
-        "id": 21,
-        "testId": 4,
-        "question": "Непрерывная случайная величина X с плотностью f(x) = (1/√π) e^{-x²}. Найти MX и DX.",
-        "optionA": "MX = -1; DX = 1/2",
-        "optionB": "MX = 0; DX = 0.5",
-        "optionC": "MX = +1; DX = 2",
-        "optionD": "MX = -0.5; DX = 1/2",
-        "correctAnswer": "b",
-        "points": 2
-    },
-    {
-        "id": 22,
-        "testId": 4,
-        "question": "Найти M(X·Y) по таблице совместного распределения.",
-        "optionA": "14",
-        "optionB": "1.5",
-        "optionC": "0.6",
-        "optionD": "-0.2",
-        "correctAnswer": "a",
-        "points": 2
-    },
-    {
-        "id": 23,
-        "testId": 4,
-        "question": "Как определяется выборочная дисперсия в ранжированных рядах?",
-        "optionA": "∑x_i²/(n-1) - (∑x_i/(n-1))²",
-        "optionB": "(∑x_i² / n) - (∑x_i / n)²",
-        "optionC": "∑x_i² / n",
-        "optionD": "∑x_i / n",
-        "correctAnswer": "b",
-        "points": 2
-    },
-    {
-        "id": 24,
-        "testId": 4,
-        "question": "Найти моду по таблице (5:10, 9:7, 12:9, 16:6, 19:18).",
-        "optionA": "18",
-        "optionB": "50",
-        "optionC": "5",
-        "optionD": "19",
-        "correctAnswer": "d",
-        "points": 2
-    },
-    {
-        "id": 25,
-        "testId": 4,
-        "question": "Приняв середины интервалов, найти выборочное среднее.",
-        "optionA": "4.76",
-        "optionB": "7.32",
-        "optionC": "5.74",
-        "optionD": "6.98",
-        "correctAnswer": "d",
-        "points": 2
-    },
-    {
-        "id": 26,
-        "testId": 4,
-        "question": "X ~ равномерное [a;b]. Выборка -8, -1, 2, 3, 4. Оценки a, b методом моментов.",
-        "optionA": "[-√57.6; +√57.6]",
-        "optionB": "[-√27.6; +√27.6]",
-        "optionC": "[-8; 4]",
-        "optionD": "[-√56.4; +√56.4]",
-        "correctAnswer": "d",
-        "points": 2
-    },
-    {
-        "id": 27,
-        "testId": 4,
-        "question": "Найти коэффициент ковариации между X и Y.",
-        "optionA": "-1.6",
-        "optionB": "0.16",
-        "optionC": "1.6",
-        "optionD": "0.5",
-        "correctAnswer": "c",
-        "points": 2
-    },
-    {
-        "id": 28,
-        "testId": 4,
-        "question": "Три группы студентов, отличники 9%, 4%, 6%. Вызван отличник — вероятность из третьей группы.",
-        "optionA": "8/53",
-        "optionB": "18/53",
-        "optionC": "27/53",
-        "optionD": "15/57",
-        "correctAnswer": "b",
-        "points": 2
-    },
-    {
-        "id": 29,
-        "testId": 4,
-        "question": "Эксперимент — две монеты и один игральный кубик. Сколько элементарных событий?",
-        "optionA": "38",
-        "optionB": "72",
-        "optionC": "36",
-        "optionD": "24",
-        "correctAnswer": "d",
-        "points": 2
-    }
+    // Тест 4: Вероятность и статистика
+{
+    id: 1,
+    testId: 4,
+    question: "Эксперимент состоит из подбрасывания одной монеты до появления герба. Найти вероятность того, что эксперимент закончится в нечётном шаге?",
+    optionA: "3/4",
+    optionB: "2/3",
+    optionC: "1/3",
+    optionD: "1/2",
+    correctAnswer: "b",
+    points: 2
+},
+{
+    id: 2,
+    testId: 4,
+    question: "Вероятность попадания хотя бы одного в цель при одном залпе из двух орудий равна 0,98. Найти вероятность поражения цели при одном выстреле первого орудия, если известно, что для второго орудия эта вероятность равна 0,9.",
+    optionA: "0,95",
+    optionB: "0,6",
+    optionC: "0,8",
+    optionD: "0,7",
+    correctAnswer: "c",
+    points: 2
+},
+{
+    id: 3,
+    testId: 4,
+    question: "В квадрат со стороной 1 брошена 1 точка. Найти вероятность того, что расстояние от точки до стороны квадрата не превышает 0,1.",
+    optionA: "0,36",
+    optionB: "1",
+    optionC: "0,4",
+    optionD: "0,04",
+    correctAnswer: "a",
+    points: 2
+},
+{
+    id: 4,
+    testId: 4,
+    question: "Как определяется наивероятнейшее число наступивших событий k₀ в схеме Бернулли?",
+    optionA: "np - p < k₀ < np + q",
+    optionB: "np + q < k₀ < np + p",
+    optionC: "np - q < k₀ < np + p",
+    optionD: "np - q < k₀ < np - p",
+    correctAnswer: "c",
+    points: 2
+},
+{
+    id: 5,
+    testId: 4,
+    question: "X принимает значения -1, 1 с вероятностями 0.6 и 0.4, Y принимает -1 и +1 с вероятностями 0.3 и 0.7 (независимы). Найти среднее квадратическое отклонение X+Y.",
+    optionA: "√1.84",
+    optionB: "√0.2",
+    optionC: "√1.2",
+    optionD: "√1.8",
+    correctAnswer: "d",
+    points: 2
+},
+{
+    id: 6,
+    testId: 4,
+    question: "Какое свойство справедливо для функции плотности случайной величины ξ?",
+    optionA: "f_ξ(x) ≥ 0",
+    optionB: "f_ξ(x) ≥ 0.5",
+    optionC: "f_ξ(x) > 0",
+    optionD: "f_ξ(x) ≤ 0",
+    correctAnswer: "a",
+    points: 2
+},
+{
+    id: 7,
+    testId: 4,
+    question: "Найти дисперсию непрерывной случайной величины, равномерно распределённой на интервале [-4, 8].",
+    optionA: "11",
+    optionB: "13",
+    optionC: "12",
+    optionD: "10",
+    correctAnswer: "c",
+    points: 2
+},
+{
+    id: 8,
+    testId: 4,
+    question: "Найти M(X·Y) по таблице совместного распределения.",
+    optionA: "14",
+    optionB: "0.6",
+    optionC: "26.6",
+    optionD: "2.1",
+    correctAnswer: "c",
+    points: 2
+},
+{
+    id: 9,
+    testId: 4,
+    question: "Для выборки 8, 5, 6, 9 найти среднее квадратическое отклонение.",
+    optionA: "70.5",
+    optionB: "60.5",
+    optionC: "50.5",
+    optionD: "80.5",
+    correctAnswer: "b",
+    points: 2
+},
+{
+    id: 10,
+    testId: 4,
+    question: "Найти медиану по таблице частот.",
+    optionA: "9",
+    optionB: "14",
+    optionC: "16",
+    optionD: null,
+    correctAnswer: "a",
+    points: 2
+},
+{
+    id: 11,
+    testId: 4,
+    question: "Найти моду интервального ряда.",
+    optionA: "12/17",
+    optionB: "3/5",
+    optionC: "9/5",
+    optionD: "8/3",
+    correctAnswer: "d",
+    points: 2
+},
+{
+    id: 12,
+    testId: 4,
+    question: "X имеет показательное распределение. Найти оценку параметра λ методом моментов.",
+    optionA: "5/8",
+    optionB: "17/10",
+    optionC: "5/9",
+    optionD: "10/17",
+    correctAnswer: "d",
+    points: 2
+},
+{
+    id: 13,
+    testId: 4,
+    question: "Методом наименьших квадратов найти уравнение регрессии y = a·x + b.",
+    optionA: "y = -0,7941·x + 8,5294",
+    optionB: "y = 1,0588·x + 3,1765",
+    optionC: "y = 0,9565·x - 1,9565",
+    optionD: "y = -1,0556·x + 9,7778",
+    correctAnswer: "a",
+    points: 2
+},
+{
+    id: 14,
+    testId: 4,
+    question: "Из 30 стрелков: 12 с p=0.6, 8 с p=0.5, 10 с p=0.7. Стрелок попал. Вероятность, что он из первой группы?",
+    optionA: "36/91",
+    optionB: "20/91",
+    optionC: "35/91",
+    optionD: "91/150",
+    correctAnswer: "a",
+    points: 2
+},
+{
+    id: 15,
+    testId: 4,
+    question: "Если A = (-∞; 3) и B = [-1; +∞), найти A Δ B.",
+    optionA: "(-∞; -1)",
+    optionB: "(-∞; -1) ∪ [3; +∞)",
+    optionC: "[3; +∞)",
+    optionD: "[-1;3)",
+    correctAnswer: "b",
+    points: 2
+},
+{
+    id: 16,
+    testId: 4,
+    question: "Вероятность ровно одного попадания при залпе из двух орудий = 0.38, вероятность второго = 0.7. Найти вероятность первого.",
+    optionA: "0.5",
+    optionB: "0.8",
+    optionC: "0.6",
+    optionD: "0.9",
+    correctAnswer: "b",
+    points: 2
+},
+{
+    id: 17,
+    testId: 4,
+    question: "Если -2 ≤ x ≤ 2, -2 ≤ y ≤ 2, найти P(x² + y² < 1).",
+    optionA: "π/16",
+    optionB: "π/4",
+    optionC: "1",
+    optionD: "16π",
+    correctAnswer: "a",
+    points: 2
+},
+{
+    id: 18,
+    testId: 4,
+    question: "В формулах Бернулли и Пуассона как определяется вероятность, что событие A произойдёт больше чем k раз?",
+    optionA: "P(0) + … + P(k)",
+    optionB: "P(0) + … + P(k-1)",
+    optionC: "P(k) + … + P(n)",
+    optionD: "P(k+1) + … + P(n)",
+    correctAnswer: "d",
+    points: 2
+},
+{
+    id: 19,
+    testId: 4,
+    question: "Если D(x̄) = 4, D(ȳ) = 3, найти D((4x̄ - 5ȳ)/10 + 2022).",
+    optionA: "-0.21",
+    optionB: "1.42",
+    optionC: "1.39",
+    optionD: "-0.12",
+    correctAnswer: "c",
+    points: 2
+},
+{
+    id: 20,
+    testId: 4,
+    question: "Математическое ожидание непрерывной случайной величины ξ",
+    optionA: "∫ (x-a) f(x) dx",
+    optionB: "∫_a^b x f(x) dx",
+    optionC: "∫ x f(x) dx",
+    optionD: "∫_{-∞}^{+∞} x f_ξ(x) dx",
+    correctAnswer: "d",
+    points: 2
+},
+{
+    id: 21,
+    testId: 4,
+    question: "Непрерывная случайная величина X с плотностью f(x) = (1/√π) e^{-x²}. Найти MX и DX.",
+    optionA: "MX = -1; DX = 1/2",
+    optionB: "MX = 0; DX = 0.5",
+    optionC: "MX = +1; DX = 2",
+    optionD: "MX = -0.5; DX = 1/2",
+    correctAnswer: "b",
+    points: 2
+},
+{
+    id: 22,
+    testId: 4,
+    question: "Найти M(X·Y) по таблице совместного распределения.",
+    optionA: "14",
+    optionB: "1.5",
+    optionC: "0.6",
+    optionD: "-0.2",
+    correctAnswer: "a",
+    points: 2
+},
+{
+    id: 23,
+    testId: 4,
+    question: "Как определяется выборочная дисперсия в ранжированных рядах?",
+    optionA: "∑x_i²/(n-1) - (∑x_i/(n-1))²",
+    optionB: "(∑x_i² / n) - (∑x_i / n)²",
+    optionC: "∑x_i² / n",
+    optionD: "∑x_i / n",
+    correctAnswer: "b",
+    points: 2
+},
+{
+    id: 24,
+    testId: 4,
+    question: "Найти моду по таблице (5:10, 9:7, 12:9, 16:6, 19:18).",
+    optionA: "18",
+    optionB: "50",
+    optionC: "5",
+    optionD: "19",
+    correctAnswer: "d",
+    points: 2
+},
+{
+    id: 25,
+    testId: 4,
+    question: "Приняв середины интервалов, найти выборочное среднее.",
+    optionA: "4.76",
+    optionB: "7.32",
+    optionC: "5.74",
+    optionD: "6.98",
+    correctAnswer: "d",
+    points: 2
+},
+{
+    id: 26,
+    testId: 4,
+    question: "X ~ равномерное [a;b]. Выборка -8, -1, 2, 3, 4. Оценки a, b методом моментов.",
+    optionA: "[-√57.6; +√57.6]",
+    optionB: "[-√27.6; +√27.6]",
+    optionC: "[-8; 4]",
+    optionD: "[-√56.4; +√56.4]",
+    correctAnswer: "d",
+    points: 2
+},
+{
+    id: 27,
+    testId: 4,
+    question: "Найти коэффициент ковариации между X и Y.",
+    optionA: "-1.6",
+    optionB: "0.16",
+    optionC: "1.6",
+    optionD: "0.5",
+    correctAnswer: "c",
+    points: 2
+},
+{
+    id: 28,
+    testId: 4,
+    question: "Три группы студентов, отличники 9%, 4%, 6%. Вызван отличник — вероятность из третьей группы.",
+    optionA: "8/53",
+    optionB: "18/53",
+    optionC: "27/53",
+    optionD: "15/57",
+    correctAnswer: "b",
+    points: 2
+},
+{
+    id: 29,
+    testId: 4,
+    question: "Эксперимент — две монеты и один игральный кубик. Сколько элементарных событий?",
+    optionA: "38",
+    optionB: "72",
+    optionC: "36",
+    optionD: "24",
+    correctAnswer: "d",
+    points: 2
+},
 ]
 /* 
 ИНСТРУКЦИЯ ПО ДОБАВЛЕНИЮ ВОПРОСОВ С ИЗОБРАЖЕНИЯМИ:
@@ -601,4 +602,4 @@ const DB = {
 
 4. Можно комбинировать - вопрос картинкой, ответы текстом или наоборот!
 */
-        };
+        
