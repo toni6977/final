@@ -23,9 +23,21 @@
             <div class="page-sidebar-inner">
                 <div class="page-sidebar-menu">
                     <ul class="accordion-menu">
-                        <li><a href="tests.html"><i class="menu-icon">📚</i><span>Мои тесты</span></a></li>
-                        <li class="active"><a href="results.html"><i class="menu-icon">📊</i><span>Результаты</span></a></li>
-                        <li><a href="#" onclick="logout()"><i class="menu-icon">🚪</i><span>Выйти</span></a></li>
+                        <li>
+                            <a href="tests.html">
+                                <i class="menu-icon">📚</i><span>Мои тесты</span>
+                            </a>
+                        </li>
+                        <li class="active">
+                            <a href="results.html">
+                                <i class="menu-icon">📊</i><span>Результаты</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" onclick="logout()">
+                                <i class="menu-icon">🚪</i><span>Выйти</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -52,10 +64,12 @@
     <script>
         // Проверка авторизации
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        if (!currentUser) window.location.href = 'index.html';
+        if (!currentUser) {
+            window.location.href = 'index.html';
+        }
         document.getElementById('userName').textContent = currentUser.fullName;
 
-        // Получаем все результаты пользователя
+        // Получаем результаты текущего пользователя
         const allResults = JSON.parse(localStorage.getItem('testResults') || '[]');
         const userResults = allResults
             .filter(r => r.userId === currentUser.id)
@@ -89,31 +103,28 @@
             `;
 
             userResults.forEach(r => {
-                // Поиск теста по всем разделам
-                let test = null;
+                // Поиск названия теста по всем разделам
+                let testTitle = 'Неизвестный тест';
                 for (const section of DB.sections) {
                     const found = section.tests.find(t => t.id === r.testId);
                     if (found) {
-                        test = found;
+                        testTitle = found.title;
                         break;
                     }
                 }
-                if (!test) test = { title: 'Неизвестный тест' };
 
                 const colorClass = r.percentage >= 70 ? 'success' :
                                   (r.percentage >= 50 ? 'warning' : 'danger');
 
                 html += `
                     <tr>
-                        <td><strong>${test.title}</strong></td>
+                        <td><strong>${testTitle}</strong></td>
                         <td>${r.date}</td>
                         <td><span class="label label-${colorClass}">${r.score} / ${r.maxScore}</span></td>
                         <td>
                             <div class="progress">
                                 <div class="progress-bar progress-bar-${colorClass}" 
-                                     style="width: ${r.percentage}%">
-                                    ${r.percentage}%
-                                </div>
+                                     style="width: ${r.percentage}%">${r.percentage}%</div>
                             </div>
                         </td>
                         <td>
