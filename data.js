@@ -3,10 +3,10 @@ const DB = {
     tests: [
          {
             id: 1,
-            title: "Вероятность и статистика",
-            description: "Тест на знание Вероятности и статистики",
+            title: "Основы кибербезопасности 1",
+            description: "Тест на знание Основ кибербезопасности",
             duration: 30,
-            questionCount: 90
+            questionCount: 35
         },
     ],
     
