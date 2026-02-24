@@ -240,7 +240,7 @@ const DB = {
         { id: 47, testId: 3, question: "Какая команда используется для вставки документа в MongoDB?", optionA: "add()", optionB: "insert()", optionC: "create()", optionD: "put()", correctAnswer: "b", points: 2 },
         { id: 48, testId: 3, question: "Что такое replica set в MongoDB?", optionA: "Группа коллекций", optionB: "Группа серверов для репликации данных", optionC: "Тип индекса", optionD: "Резервная копия", correctAnswer: "b", points: 3 },
         { id: 49, testId: 3, question: "Какой порт по умолчанию использует MongoDB?", optionA: "3306", optionB: "5432", optionC: "27017", optionD: "6379", correctAnswer: "c", points: 2 },
-        { id: 50, testId: 3, question: "Что такое aggregation pipeline в MongoDB?", optionA: "Инструмент для резервного копирования", optionB: "Фреймворк для обработки данных через последовательность операций", optionC: "Тип индекса", optionD: "Метод репликации", correctAnswer: "b", points: 4 }
+        { id: 50, testId: 3, question: "Что такое aggregation pipeline в MongoDB?", optionA: "Инструмент для резервного копирования", optionB: "Фреймворк для обработки данных через последовательность операций", optionC: "Тип индекса", optionD: "Метод репликации", correctAnswer: "b", points: 4 },
 
     // Тест 4: Вероятность и статистика
 {
