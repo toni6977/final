@@ -6,35 +6,77 @@
     <title>Мои тесты</title>
     <link href="assets/css/style.css" rel="stylesheet">
     <style>
-        /* Дополнительные стили для разделов (можно вынести в style.css позже) */
-        .section-header {
-            margin: 50px 0 25px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid #eee;
+        /* Стили для аккордеона */
+        .accordion-section {
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #fff;
         }
-        .section-header h2 {
-            margin: 0;
-            font-size: 28px;
+        .accordion-header {
+            background: #f8f9fa;
+            padding: 18px 20px;
+            cursor: pointer;
+            font-size: 22px;
+            font-weight: 600;
             color: #2c3e50;
             display: flex;
             align-items: center;
             gap: 12px;
+            transition: background 0.3s;
         }
-        .section-header p {
-            margin: 8px 0 0;
-            color: #7f8c8d;
-            font-size: 16px;
+        .accordion-header:hover {
+            background: #e9ecef;
         }
-        .empty-section {
+        .accordion-header::after {
+            content: '▼';
+            margin-left: auto;
+            font-size: 18px;
+            transition: transform 0.3s;
+        }
+        .accordion-header.active::after {
+            transform: rotate(180deg);
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, padding 0.3s;
+            padding: 0 20px;
+            background: #fff;
+        }
+        .accordion-content.active {
+            max-height: 2000px; /* достаточно большой, чтобы вместить все тесты */
+            padding: 20px;
+        }
+        .test-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .test-card {
+            flex: 1 1 45%;
+            min-width: 300px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 20px;
+            background: #fafafa;
+        }
+        .test-card h4 {
+            margin-top: 0;
+            color: #34495e;
+        }
+        .empty-msg {
             color: #95a5a6;
             font-style: italic;
-            padding: 20px 0;
+            padding: 20px;
+            text-align: center;
         }
     </style>
 </head>
 <body class="page-sidebar-fixed page-header-fixed">
     <div class="page-container">
-        <!-- Sidebar -->
+        <!-- Sidebar (без изменений) -->
         <div class="page-sidebar">
             <a class='logo-box' href='/tests'>
                 <div>
@@ -66,7 +108,6 @@
 
         <!-- Content -->
         <div class="page-content">
-            <!-- Header -->
             <div class="page-header">
                 <nav class="navbar">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -86,13 +127,12 @@
                 </nav>
             </div>
 
-            <!-- Page Inner -->
             <div class="page-inner">
                 <div class="page-title">
                     <h1>Доступные тесты</h1>
                 </div>
 
-                <div id="testsList"></div>
+                <div id="sectionsContainer"></div>
             </div>
         </div>
     </div>
@@ -106,55 +146,72 @@
         }
         document.getElementById('userName').textContent = currentUser.fullName;
 
-        // Отрисовка разделов и тестов
-        const testsContainer = document.getElementById('testsList');
+        // Отрисовка разделов
+        const container = document.getElementById('sectionsContainer');
 
         DB.sections.forEach(section => {
-            // Заголовок раздела
-            const sectionDiv = document.createElement('div');
-            sectionDiv.className = 'section-header';
-            sectionDiv.innerHTML = `
-                <h2>${section.icon} ${section.title}</h2>
-                <p>${section.description}</p>
+            const sectionBlock = document.createElement('div');
+            sectionBlock.className = 'accordion-section';
+
+            // Заголовок (кликабельный)
+            const header = document.createElement('div');
+            header.className = 'accordion-header';
+            header.innerHTML = `
+                ${section.icon} ${section.title}
+                <small style="margin-left: 15px; color: #7f8c8d; font-weight: normal;">
+                    ${section.tests.length} тестов
+                </small>
             `;
-            testsContainer.appendChild(sectionDiv);
 
-            // Ряд карточек
-            const row = document.createElement('div');
-            row.className = 'row';
+            // Контент (скрытый по умолчанию)
+            const content = document.createElement('div');
+            content.className = 'accordion-content';
 
-            if (!section.tests || section.tests.length === 0) {
-                const empty = document.createElement('p');
-                empty.className = 'empty-section';
-                empty.textContent = 'В этом разделе пока нет тестов';
-                row.appendChild(empty);
+            if (section.tests.length === 0) {
+                content.innerHTML = `<p class="empty-msg">В этом разделе пока нет тестов</p>`;
             } else {
+                const row = document.createElement('div');
+                row.className = 'test-row';
+
                 section.tests.forEach(test => {
-                    const col = document.createElement('div');
-                    col.className = 'col-md-6';
-
-                    col.innerHTML = `
-                        <div class="panel">
-                            <div class="panel-body">
-                                <h3>${test.title}</h3>
-                                <p>${test.description || 'Тест по теме раздела'}</p>
-                                <p><strong>Количество вопросов:</strong> ${test.questionCount}</p>
-                                <p><strong>Время:</strong> ${test.duration} минут</p>
-                                <a href="test.html?id=${test.id}" class="btn btn-primary">
-                                    ▶ Начать тест
-                                </a>
-                            </div>
-                        </div>
+                    const card = document.createElement('div');
+                    card.className = 'test-card';
+                    card.innerHTML = `
+                        <h4>${test.title}</h4>
+                        <p style="color: #7f8c8d; margin: 10px 0;">${test.description || 'Тест по теме раздела'}</p>
+                        <p><strong>Вопросов:</strong> ${test.questionCount}</p>
+                        <p><strong>Время:</strong> ${test.duration} минут</p>
+                        <a href="test.html?id=${test.id}" class="btn btn-primary" style="margin-top: 15px; display: inline-block;">
+                            ▶ Начать тест
+                        </a>
                     `;
-
-                    row.appendChild(col);
+                    row.appendChild(card);
                 });
+
+                content.appendChild(row);
             }
 
-            testsContainer.appendChild(row);
+            sectionBlock.appendChild(header);
+            sectionBlock.appendChild(content);
+            container.appendChild(sectionBlock);
+
+            // Обработчик клика по заголовку
+            header.addEventListener('click', () => {
+                const isActive = content.classList.contains('active');
+                
+                // Закрываем все остальные разделы (опционально)
+                document.querySelectorAll('.accordion-content').forEach(c => {
+                    c.classList.remove('active');
+                    c.previousElementSibling.classList.remove('active');
+                });
+
+                // Открываем/закрываем текущий
+                content.classList.toggle('active', !isActive);
+                header.classList.toggle('active', !isActive);
+            });
         });
 
-        // Функции (logout, toggle sidebar, dropdown) — без изменений
+        // Функции logout, sidebar toggle и dropdown — без изменений
         function logout() {
             localStorage.removeItem('currentUser');
             window.location.href = 'index.html';
