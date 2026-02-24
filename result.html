@@ -13,6 +13,7 @@
         .alert-success { background: #dff0d8; color: #3c763d; border-color: #d6e9c6; }
         .alert-warning { background: #fcf8e3; color: #8a6d3b; border-color: #faebcc; }
         .alert-danger  { background: #f2dede; color: #a94442; border-color: #ebccd1; }
+        .result-score { font-size: 60px; font-weight: bold; margin: 0; }
     </style>
 </head>
 <body class="page-sidebar-fixed page-header-fixed">
@@ -25,21 +26,9 @@
             <div class="page-sidebar-inner">
                 <div class="page-sidebar-menu">
                     <ul class="accordion-menu">
-                        <li>
-                            <a href="tests.html">
-                                <i class="menu-icon">📚</i><span>Мои тесты</span>
-                            </a>
-                        </li>
-                        <li class="active">
-                            <a href="results.html">
-                                <i class="menu-icon">📊</i><span>Результаты</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" onclick="logout()">
-                                <i class="menu-icon">🚪</i><span>Выйти</span>
-                            </a>
-                        </li>
+                        <li><a href="tests.html"><i class="menu-icon">📚</i><span>Мои тесты</span></a></li>
+                        <li class="active"><a href="results.html"><i class="menu-icon">📊</i><span>Результаты</span></a></li>
+                        <li><a href="#" onclick="logout()"><i class="menu-icon">🚪</i><span>Выйти</span></a></li>
                     </ul>
                 </div>
             </div>
@@ -54,14 +43,9 @@
             </div>
 
             <div class="page-inner">
-                <div class="page-title">
-                    <h1>Результат теста</h1>
-                </div>
-
+                <div class="page-title"><h1>Результат теста</h1></div>
                 <div class="panel">
-                    <div class="panel-body" id="resultContent">
-                        <!-- Результат будет здесь -->
-                    </div>
+                    <div class="panel-body" id="resultContent"></div>
                 </div>
             </div>
         </div>
@@ -71,114 +55,98 @@
     <script>
         // Проверка авторизации
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        if (!currentUser) {
-            window.location.href = 'index.html';
-        }
+        if (!currentUser) window.location.href = 'index.html';
         document.getElementById('userName').textContent = currentUser.fullName;
 
-        // Получаем ID результата из URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const resultId = parseInt(urlParams.get('id'));
-
-        // Находим результат
+        // Получаем ID результата
+        const resultId = parseInt(new URLSearchParams(window.location.search).get('id'));
         const allResults = JSON.parse(localStorage.getItem('testResults') || '[]');
         const result = allResults.find(r => r.id === resultId);
 
+        const container = document.getElementById('resultContent');
+
         if (!result) {
-            document.getElementById('resultContent').innerHTML = `
-                <div class="alert alert-danger">
+            container.innerHTML = `
+                <div class="alert alert-danger text-center">
                     <h3>Результат не найден</h3>
                     <p>Возможно, результат был удалён или ссылка неверная.</p>
-                    <a href="tests.html" class="btn btn-primary">Вернуться к тестам</a>
+                    <a href="tests.html" class="btn btn-primary">← Вернуться к тестам</a>
                 </div>
             `;
-            return;
-        }
-
-        // Находим тест по testId (ищем во всех разделах)
-        let selectedTest = null;
-        for (const section of DB.sections) {
-            const found = section.tests.find(t => t.id === result.testId);
-            if (found) {
-                selectedTest = found;
-                break;
+        } else {
+            // Поиск теста по всем разделам
+            let selectedTest = null;
+            for (const section of DB.sections) {
+                const found = section.tests.find(t => t.id === result.testId);
+                if (found) {
+                    selectedTest = found;
+                    break;
+                }
             }
-        }
+            if (!selectedTest) selectedTest = { title: 'Неизвестный тест' };
 
-        if (!selectedTest) {
-            selectedTest = { title: 'Неизвестный тест' }; // запасной вариант
-        }
+            // Цвет результата
+            const colorClass = result.percentage >= 70 ? 'success' :
+                              (result.percentage >= 50 ? 'warning' : 'danger');
 
-        // Определяем цвет результата
-        const colorClass = result.percentage >= 70 ? 'success' :
-                          (result.percentage >= 50 ? 'warning' : 'danger');
-
-        // Формируем HTML результата
-        let html = `
-            <div class="row">
-                <div class="col-md-8">
-                    <h2>${selectedTest.title}</h2>
-                    <p><strong>Дата:</strong> ${result.date}</p>
-                    <p><strong>Время прохождения:</strong> ${result.durationUsed || '—'}</p>
-                </div>
-                <div class="col-md-4 text-right">
-                    <div class="alert alert-${colorClass}" style="padding: 20px;">
-                        <h1 style="margin: 0; font-size: 60px;">${result.percentage}%</h1>
-                        <p style="margin: 10px 0 0; font-size: 20px;">
-                            ${result.score} из ${result.maxScore} баллов
-                        </p>
+            let html = `
+                <div class="row">
+                    <div class="col-md-8">
+                        <h2>${selectedTest.title}</h2>
+                        <p><strong>Дата:</strong> ${result.date}</p>
+                        <p><strong>Время прохождения:</strong> ${result.durationUsed || '—'}</p>
                     </div>
-                </div>
-            </div>
-            <hr>
-            <h3>Детальные результаты</h3>
-        `;
-
-        result.details.forEach((d, i) => {
-            const panelClass = d.isCorrect ? 'success' : 'danger';
-            html += `
-                <div class="panel panel-${panelClass}">
-                    <div class="panel-heading">
-                        <strong>Вопрос ${i+1}</strong>
-                        <span class="pull-right">
-                            ${d.isCorrect 
-                                ? `✓ Правильно (+${d.points} баллов)` 
-                                : `✗ Неправильно (0 баллов)`}
-                        </span>
-                    </div>
-                    <div class="panel-body">
-                        <p><strong>Вопрос:</strong> ${d.question}</p>
-                        <p><strong>Ваш ответ:</strong> 
-                            <span class="label label-${d.isCorrect ? 'success' : 'danger'}">
-                                ${d.userAnswer ? d.userAnswer.toUpperCase() : 'Не отвечено'}
-                            </span>
-                        </p>
-                        ${!d.isCorrect ? `
-                            <p><strong>Правильный ответ:</strong> 
-                                <span class="label label-success">${d.correctAnswer.toUpperCase()}</span>
+                    <div class="col-md-4 text-right">
+                        <div class="alert alert-${colorClass}" style="padding:25px;">
+                            <div class="result-score">${result.percentage}%</div>
+                            <p style="margin:10px 0 0; font-size:20px;">
+                                ${result.score} / ${result.maxScore} баллов
                             </p>
-                        ` : ''}
+                        </div>
                     </div>
+                </div>
+                <hr>
+                <h3>Детальные результаты</h3>
+            `;
+
+            result.details.forEach((d, i) => {
+                const panelClass = d.isCorrect ? 'success' : 'danger';
+                html += `
+                    <div class="panel panel-${panelClass}">
+                        <div class="panel-heading">
+                            <strong>Вопрос ${i+1}</strong>
+                            <span class="pull-right">
+                                ${d.isCorrect ? `✓ Правильно (+${d.points})` : '✗ Неправильно'}
+                            </span>
+                        </div>
+                        <div class="panel-body">
+                            <p><strong>${d.question}</strong></p>
+                            <p><strong>Ваш ответ:</strong> 
+                                <span class="label label-${d.isCorrect?'success':'danger'}">
+                                    ${d.userAnswer ? d.userAnswer.toUpperCase() : 'Не отвечено'}
+                                </span>
+                            </p>
+                            ${!d.isCorrect ? `<p><strong>Правильный:</strong> <span class="label label-success">${d.correctAnswer.toUpperCase()}</span></p>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `
+                <div class="text-center" style="margin-top:40px;">
+                    <a href="tests.html" class="btn btn-primary btn-lg">← Вернуться к тестам</a>
+                    <a href="results.html" class="btn btn-default btn-lg" style="margin-left:15px;">☰ Все результаты</a>
                 </div>
             `;
-        });
 
-        html += `
-            <div class="text-center" style="margin: 40px 0;">
-                <a href="tests.html" class="btn btn-primary btn-lg">← Вернуться к тестам</a>
-                <a href="results.html" class="btn btn-default btn-lg" style="margin-left: 15px;">
-                    ☰ Все результаты
-                </a>
-            </div>
-        `;
+            container.innerHTML = html;
+        }
 
-        document.getElementById('resultContent').innerHTML = html;
-
-        // Функция выхода
         function logout() {
             localStorage.clear();
             window.location.href = 'index.html';
         }
     </script>
+    <script src="protection.js"></script>
 </body>
 </html>
