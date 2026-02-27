@@ -78,7 +78,7 @@ const DB = {
                     description: "Решай и радуйся)",
                     duration: 30,
                     questionCount: 35
-                },
+                }
             ] // пока пусто
         }
     ],
