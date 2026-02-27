@@ -139,6 +139,7 @@ body {
     overflow-wrap: anywhere; /* Позволяет переносить текст в любом месте */
     box-sizing: border-box; /* Чтобы padding не увеличивал ширину блока сверх 100% */
 }
+}
 
 .answers-test {
     list-style: none;
