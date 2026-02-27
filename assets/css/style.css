@@ -133,6 +133,11 @@ body {
     padding: 20px;
     background: #f8f9fa;
     border-left: 4px solid rgb(29,45,91);
+    word-wrap: break-word;       /* Переносит длинные слова */
+    overflow-wrap: break-word;    /* Современный аналог word-wrap */
+    white-space: normal;         /* Гарантирует стандартный перенос строк */
+    word-break: break-word;      /* Помогает, если в тексте есть очень длинные ссылки или спецсимволы */
+}
 }
 
 .answers-test {
