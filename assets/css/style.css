@@ -133,15 +133,11 @@ body {
     padding: 20px;
     background: #f8f9fa;
     border-left: 4px solid rgb(29, 45, 91);
-
-    /* ГЛАВНОЕ ИСПРАВЛЕНИЕ: */
     overflow-wrap: anywhere;   /* Разрешает разрыв в ЛЮБОМ месте, даже внутри слитного кода */
     word-break: break-word;    /* Для старых браузеров */
     white-space: normal;       /* Позволяет тексту переходить на новую строку */
-    
     display: block;            /* Убеждаемся, что это блочный элемент */
     width: 100%;               /* Занимает всю доступную ширину */
-}
 }
 
 .answers-test {
